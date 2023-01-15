@@ -1,0 +1,469 @@
+//--------------------------------------------------------------------------------------------------------------------------------------- Icons for the Weapons Pack "Custom Weapons: Classic", made by bigmazi
+//--------------------------------------------------------------------------------------------------------------------------------------- Version: [1F]
+//-----------CUSTOM WEAPONS: CLASSIC ICONS [1F] -----------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------------------------------------------- For more info, check out the link(s) below, or join the Server via Server Browser;
+//--------------------------------------------------------------------------------------------------------------------------------------- [ https://gamebanana.com/mods/307880 ] [ https://rentry.co/cwc_motd#manuals ]
+"custom_kill_icons"
+{
+	TextureData
+	{
+// *** CW1F ICONS ***
+// ------------------
+		"bolt_action_rifle"
+		{
+			"dfile"		"HUD/d_cw1f"
+			"dnegfile"	"HUD/dneg_cw1f"
+			"x"			"0"
+			"y"			"0"
+			"width"		"112"
+			"height"	"32"
+		}
+		"defibrillator"
+		{
+			"dfile"		"HUD/d_cw1f"
+			"dnegfile"	"HUD/dneg_cw1f"
+			"x"			"0"
+			"y"			"32"
+			"width"		"52"
+			"height"	"32"
+		}
+		"harpoon_gun"
+		{
+			"dfile"		"HUD/d_cw1f"
+			"dnegfile"	"HUD/dneg_cw1f"
+			"x"			"0"
+			"y"			"64"
+			"width"		"102"
+			"height"	"32"
+		}
+		"jam"
+		{
+			"dfile"		"HUD/d_cw1f"
+			"dnegfile"	"HUD/dneg_cw1f"
+			"x"			"0"
+			"y"			"96"
+			"width"		"90"
+			"height"	"32"
+		}
+		"lightning_gun"
+		{
+			"dfile"		"HUD/d_cw1f"
+			"dnegfile"	"HUD/dneg_cw1f"
+			"x"			"0"
+			"y"			"128"
+			"width"		"72"
+			"height"	"32"
+		}
+		"lightning_gun_fireball"
+		{
+			"dfile"		"HUD/d_cw1f"
+			"dnegfile"	"HUD/dneg_cw1f"
+			"x"			"0"
+			"y"			"160"
+			"width"		"94"
+			"height"	"32"
+		}
+		"pocket_accelerator_break"
+		{
+			"dfile"		"HUD/d_cw1f"
+			"dnegfile"	"HUD/dneg_cw1f"
+			"x"			"0"
+			"y"			"192"
+			"width"		"112"
+			"height"	"32"
+		}
+		"harpoon_gun_env"
+		{
+			"dfile"		"HUD/d_cw1f"
+			"dnegfile"	"HUD/dneg_cw1f"
+			"x"			"0"
+			"y"			"224"
+			"width"		"128"
+			"height"	"32"
+		}
+		"pumpkin_action_mine"
+		{
+			"dfile"		"HUD/d_cw1f"
+			"dnegfile"	"HUD/dneg_cw1f"
+			"x"			"128"
+			"y"			"0"
+			"width"		"110"
+			"height"	"32"
+		}
+		"pumpkin_action_bomb"
+		{
+			"dfile"		"HUD/d_cw1f"
+			"dnegfile"	"HUD/dneg_cw1f"
+			"x"			"128"
+			"y"			"32"
+			"width"		"110"
+			"height"	"32"
+		}
+		"pumpkin_action_dynamite"
+		{
+			"dfile"		"HUD/d_cw1f"
+			"dnegfile"	"HUD/dneg_cw1f"
+			"x"			"128"
+			"y"			"64"
+			"width"		"110"
+			"height"	"32"
+		}
+		"pumpkin_action_sticky"
+		{
+			"dfile"		"HUD/d_cw1f"
+			"dnegfile"	"HUD/dneg_cw1f"
+			"x"			"128"
+			"y"			"96"
+			"width"		"110"
+			"height"	"32"
+		}
+		"pumpkin_action_bottle"
+		{
+			"dfile"		"HUD/d_cw1f"
+			"dnegfile"	"HUD/dneg_cw1f"
+			"x"			"128"
+			"y"			"128"
+			"width"		"110"
+			"height"	"32"
+		}
+		"explosive_crossbow_sacrifice"
+		{
+			"dfile"		"HUD/d_cw1f"
+			"dnegfile"	"HUD/dneg_cw1f"
+			"x"			"128"
+			"y"			"160"
+			"width"		"110"
+			"height"	"32"
+		}
+			
+// *** CW1E ICONS ***
+// ------------------
+		"shredder"
+		{
+			"dfile"		"HUD/d_cw1e"
+			"dnegfile"	"HUD/dneg_cw1e"
+			"x"			"0"
+			"y"			"0"
+			"width"		"104"
+			"height"	"32"
+		}
+		"carbine_new"
+		{
+			"dfile"		"HUD/d_cw1e"
+			"dnegfile"	"HUD/dneg_cw1e"
+			"x"			"0"
+			"y"			"32"
+			"width"		"104"
+			"height"	"32"
+		}
+		"pumpkin_action"
+		{
+			"dfile"		"HUD/d_cw1e"
+			"dnegfile"	"HUD/dneg_cw1e"
+			"x"			"0"
+			"y"			"64"
+			"width"		"104"
+			"height"	"32"
+		}
+		"red_button"
+		{
+			"dfile"		"HUD/d_cw1e"
+			"dnegfile"	"HUD/dneg_cw1e"
+			"x"			"0"
+			"y"			"96"
+			"width"		"64"
+			"height"	"32"
+		}
+		"pumpkin_action_explosion"
+		{
+			"dfile"		"HUD/d_cw1e"
+			"dnegfile"	"HUD/dneg_cw1e"
+			"x"			"0"
+			"y"			"128"
+			"width"		"104"
+			"height"	"32"
+		}
+		"red_button_sacrifice"
+		{
+			"dfile"		"HUD/d_cw1e"
+			"dnegfile"	"HUD/dneg_cw1e"
+			"x"			"0"
+			"y"			"160"
+			"width"		"102"
+			"height"	"32"
+		}
+
+		// *** CW1D ICONS ***
+		// ------------------
+		"winns_lever"
+		{
+			"dfile"		"HUD/d_cw1d"
+			"dnegfile"	"HUD/dneg_cw1d"
+			"x"			"0"
+			"y"			"0"
+			"width"		"96"
+			"height"	"32"
+		}
+		"lucky_strike"
+		{
+			"dfile"		"HUD/d_cw1d"
+			"dnegfile"	"HUD/dneg_cw1d"
+			"x"			"0"
+			"y"			"32"
+			"width"		"128"
+			"height"	"32"
+		}
+		"sten"
+		{
+			"dfile"		"HUD/d_cw1d"
+			"dnegfile"	"HUD/dneg_cw1d"
+			"x"			"0"
+			"y"			"64"
+			"width"		"128"
+			"height"	"32"
+		}
+		"extra_shot"
+		{
+			"dfile"		"HUD/d_cw1d"
+			"dnegfile"	"HUD/dneg_cw1d"
+			"x"			"0"
+			"y"			"96"
+			"width"		"112"
+			"height"	"32"
+		}
+		"whipper_snapper"
+		{
+			"dfile"		"HUD/d_cw1d"
+			"dnegfile"	"HUD/dneg_cw1d"
+			"x"			"0"
+			"y"			"128"
+			"width"		"80"
+			"height"	"32"
+		}
+		"anti_material_rifle"
+		{
+			"dfile"		"HUD/d_cw1d"
+			"dnegfile"	"HUD/dneg_cw1d"
+			"x"			"0"
+			"y"			"160"
+			"width"		"96"
+			"height"	"32"
+		}
+		"airburster"
+		{
+			"dfile"		"HUD/d_cw1d"
+			"dnegfile"	"HUD/dneg_cw1d"
+			"x"			"0"
+			"y"			"192"
+			"width"		"101"
+			"height"	"32"
+		}
+		"oppressors_suppressor"
+		{
+			"dfile"		"HUD/d_cw1d"
+			"dnegfile"	"HUD/dneg_cw1d"
+			"x"			"0"
+			"y"			"224"
+			"width"		"128"
+			"height"	"32"
+		}
+		"thermite_blower"
+		{
+			"dfile"		"HUD/d_cw1d"
+			"dnegfile"	"HUD/dneg_cw1d"
+			"x"			"0"
+			"y"			"256"
+			"width"		"128"
+			"height"	"32"
+		}
+		"fireworks"
+		{
+			"dfile"		"HUD/d_cw1d"
+			"dnegfile"	"HUD/dneg_cw1d"
+			"x"			"0"
+			"y"			"288"
+			"width"		"128"
+			"height"	"32"
+		}
+		"explosive_crossbow"
+		{
+			"dfile"		"HUD/d_cw1d"
+			"dnegfile"	"HUD/dneg_cw1d"
+			"x"			"0"
+			"y"			"320"
+			"width"		"128"
+			"height"	"32"
+		}
+		"mortar"
+		{
+			"dfile"		"HUD/d_cw1d"
+			"dnegfile"	"HUD/dneg_cw1d"
+			"x"			"0"
+			"y"			"352"
+			"width"		"128"
+			"height"	"32"
+		}
+		"sewing_machine"
+		{
+			"dfile"		"HUD/d_cw1d"
+			"dnegfile"	"HUD/dneg_cw1d"
+			"x"			"0"
+			"y"			"384"
+			"width"		"96"
+			"height"	"32"
+		}
+		"anti_aircraft_cannon"
+		{
+			"dfile"		"HUD/d_cw1d"
+			"dnegfile"	"HUD/dneg_cw1d"
+			"x"			"0"
+			"y"			"416"
+			"width"		"128"
+			"height"	"32"
+		}
+		"timber_saw"
+		{
+			"dfile"		"HUD/d_cw1d"
+			"dnegfile"	"HUD/dneg_cw1d"
+			"x"			"0"
+			"y"			"448"
+			"width"		"80"
+			"height"	"32"
+		}
+		"hookshot"
+		{
+			"dfile"		"HUD/d_cw1d"
+			"dnegfile"	"HUD/dneg_cw1d"
+			"x"			"0"
+			"y"			"480"
+			"width"		"128"
+			"height"	"32"
+		}
+		"overdose_mk_ii"
+		{
+			"dfile"		"HUD/d_cw1d"
+			"dnegfile"	"HUD/dneg_cw1d"
+			"x"			"0"
+			"y"			"512"
+			"width"		"110"
+			"height"	"32"
+		}
+		"soviet_classic"
+		{
+			"dfile"		"HUD/d_cw1d"
+			"dnegfile"	"HUD/dneg_cw1d"
+			"x"			"0"
+			"y"			"544"
+			"width"		"103"
+			"height"	"32"
+		}
+		"carbine"
+		{
+			"dfile"		"HUD/d_cw1d"
+			"dnegfile"	"HUD/dneg_cw1d"
+			"x"			"0"
+			"y"			"576"
+			"width"		"96"
+			"height"	"32"
+		}
+		"pocket_accelerator"
+		{
+			"dfile"		"HUD/d_cw1d"
+			"dnegfile"	"HUD/dneg_cw1d"
+			"x"			"0"
+			"y"			"608"
+			"width"		"80"
+			"height"	"32"
+		}
+		"last_vaccination"
+		{
+			"dfile"		"HUD/d_cw1d"
+			"dnegfile"	"HUD/dneg_cw1d"
+			"x"			"0"
+			"y"			"640"
+			"width"		"96"
+			"height"	"32"
+		}
+		"degroot_reserve"
+		{
+			"dfile"		"HUD/d_cw1d"
+			"dnegfile"	"HUD/dneg_cw1d"
+			"x"			"0"
+			"y"			"672"
+			"width"		"80"
+			"height"	"32"
+		}
+		"winns_lever_ricochet"
+		{
+			"dfile"		"HUD/d_cw1d"
+			"dnegfile"	"HUD/dneg_cw1d"
+			"x"			"0"
+			"y"			"704"
+			"width"		"48"
+			"height"	"32"
+		}
+		"fireworks_combo"
+		{
+			"dfile"		"HUD/d_cw1d"
+			"dnegfile"	"HUD/dneg_cw1d"
+			"x"			"0"
+			"y"			"736"
+			"width"		"128"
+			"height"	"32"
+		}
+		"explosive_crossbow_explosion"
+		{
+			"dfile"		"HUD/d_cw1d"
+			"dnegfile"	"HUD/dneg_cw1d"
+			"x"			"0"
+			"y"			"768"
+			"width"		"128"
+			"height"	"32"
+		}
+		"mortar_bonus"
+		{
+			"dfile"		"HUD/d_cw1d"
+			"dnegfile"	"HUD/dneg_cw1d"
+			"x"			"0"
+			"y"			"800"
+			"width"		"80"
+			"height"	"32"
+		}
+		"hookshot_hook"
+		{
+			"dfile"		"HUD/d_cw1d"
+			"dnegfile"	"HUD/dneg_cw1d"
+			"x"			"0"
+			"y"			"832"
+			"width"		"128"
+			"height"	"32"
+		}
+		"pocket_accelerator_scoped"
+		{
+			"dfile"		"HUD/d_cw1d"
+			"dnegfile"	"HUD/dneg_cw1d"
+			"x"			"0"
+			"y"			"864"
+			"width"		"128"
+			"height"	"32"
+		}
+		"last_vaccination_poison"
+		{
+			"dfile"		"HUD/d_cw1d"
+			"dnegfile"	"HUD/dneg_cw1d"
+			"x"			"0"
+			"y"			"896"
+			"width"		"23"
+			"height"	"32"
+		}
+		"lucky_strike_meatshot"
+		{
+			"dfile"		"HUD/d_cw1d"
+			"dnegfile"	"HUD/dneg_cw1d"
+			"x"			"0"
+			"y"			"928"
+			"width"		"128"
+			"height"	"32"
+		}
+	}
+}

@@ -1,0 +1,984 @@
+//-----------------------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------------------------------
+//-------------------Custom Response Rule File -- This is to add minor New-Old Weapons Taunt / Response Tweaks!----------------------------
+//-----------------------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------------------------------
+
+//------------------------------------
+//--New-Old Weapons Custom Responses--
+//------------------------------------
+
+// Scout
+//------------------------------------------------------------------------------------------------------------
+	criterion "WeaponIsMIRVType" 			"playerweapon" "tf_weapon_grenade_mirv" 		"required"
+	criterion "WeaponIsFAN" 				"item_name" "TF_WEAPON_DOUBLE_BARREL" 			"required" weight 10
+	criterion "WeaponIsBaseballGun" 		"item_name" "TF_WEAPON_BASEBALLGUN" 			"required" weight 10
+	criterion "WeaponIsBonk" 				"item_name" "TF_WEAPON_ENERGY_DRINK" 			"required" weight 10
+	criterion "WeaponIsBrick" 				"item_name" "TF_WEAPON_BRICK" 					"required" weight 10
+	criterion "WeaponIsSandman" 			"item_name" "TF_WEAPON_WOOD_BAT" 				"required" weight 10
+	criterion "WeaponIsFish" 				"item_name" "TF_WEAPON_HOLYMACKEREL" 			"required" weight 10
+	criterion "WeaponIsCrowbar" 			"item_name" "TF_WEAPON_CROWBAR" 				"required" weight 10
+	criterion "WeaponIsPan" 				"item_name" "TF_WEAPON_FRYING_PAN" 				"required" weight 10
+	criterion "WeaponIsObjector" 			"item_name" "TF_WEAPON_PICKET" 					"required" weight 10
+	criterion "WeaponIsDMFists" 			"item_name" "TF_WEAPON_DM_FISTS" 				"required" weight 10
+	criterion "HasntThrownRecently" 		"ThrewSomethingRecently" "!=1" 					"required" weight 10
+
+	rule NOWP-DoubleJumpScout																// When Scout double-jumps, fires his weapon, and his weapon is the FAN, 20% chance to fire this response
+	{
+		criteria ConceptFireWeapon IsScout IsDoubleJumping WeaponIsFAN 20PercentChance
+		Response PlayerDoubleJumpScout
+	}
+	rule NOWP-BaseballGunKillScout															// If scoring a kill with the Baseball Gun, fire the Moonshot responses, then have 10s downtime
+	{
+		criteria ConceptKilledPlayer KilledPlayerDelay 50PercentChance WeaponIsBaseballGun IsScout ScoutNotKillSpeech
+		ApplyContext "ScoutKillSpeech:1:10"
+		Response PlayerStunBallHitScout
+	}
+	rule NOWP-ScoutTauntBaseballGun
+	{
+		criteria ConceptPlayerTaunt IsScout WeaponIsBaseballGun
+		response ScoutTauntPrimary
+	}
+
+	rule NOWP-TossThrowableScout															// When Scout throws any "MIRV-based" throwable, fire this
+	{
+		criteria ConceptFireWeapon WeaponIsMIRVType IsScout
+		Response MilkLaunchScout
+	}
+	rule NOWP-ScoutTauntThrowableGeneric													// When Scout taunts with any throwable, do the melee taunt
+	{
+		criteria ConceptPlayerTaunt IsScout WeaponIsMIRVType
+		response ScoutTauntMelee
+	}
+	rule NOWP-DrankBonkScout																// When Scout drinks the Bonk, fire this response (buffered by 2-3 secs), with about 20s downtime
+	{
+		criteria ConceptAteFood IsScout ScoutIsNotInvuln WeaponIsBonk
+		ApplyContext "ScoutInvuln:1:20"
+		Response PlayerDodgingScout
+	}
+	rule NOWP-DrinkNotReady																	// When Scout takes damage below 80hp with the Bonk equipped, fire this, with 10s downtime
+	{
+		criteria ConceptPain IsScout WeaponIsBonk BonkHealthContext ScoutNotDrinkReadySpeech
+		ApplyContext "ScoutDrinkReadySpeech:1:10"
+		Response DrinkNotReady
+	}
+	rule NOWP-ScoutTauntDrink																// If Scout has the Bonk, do the Thriller taunt (Consumables don't have taunts by default)
+	{
+		criteria ConceptPlayerTaunt IsScout WeaponIsBonk
+		ApplyContext "ScoutDrankRecently:1:22"
+		response ScoutTauntHalloween
+	}
+
+	rule NOWP-CrowbarKillScout																// Basher responses ("Man, you're skull's so soft.. -")
+	{
+		criteria ConceptKilledPlayer KilledPlayerDelay 30PercentChance IsWeaponMelee WeaponIsCrowbar ScoutNotKillSpeechMelee IsScout
+		ApplyContext "ScoutKillSpeechMelee:1:10"
+		Response KilledPlayerMeleeBasherScout
+		Response KilledPlayerMeleeGenericScout
+	}
+	rule NOWP-PanKillScout																	// Fish responses ("Yeah I dare ya, rage-quit!")
+	{
+		criteria ConceptKilledPlayer KilledPlayerDelay 30PercentChance IsWeaponMelee WeaponIsPan ScoutNotKillSpeechMelee IsScout
+		ApplyContext "ScoutKillSpeechMelee:1:10"
+		Response KilledPlayerMeleeFishScout
+		Response KilledPlayerMeleeGenericScout
+	}
+	rule NOWP-ObjectorKillScout																// Sun-On-A-Stick Responses ("Is-is anyone even..")
+	{
+		criteria ConceptKilledPlayer KilledPlayerDelay 30PercentChance IsWeaponMelee WeaponIsObjector ScoutNotKillSpeechMelee IsScout
+		ApplyContext "ScoutKillSpeechMelee:1:10"
+		Response KilledPlayerMeleeMaceScout
+		Response KilledPlayerMeleeGenericScout
+	}
+	rule NOWP-SandmanSwingScout																// When swinging the Sandman, have a 10% chance to fire this.. I think every few swings?? 10s downtime
+	{
+		criteria ConceptFireWeapon IsScout WeaponIsSandman 10PercentChance
+		ApplyContext "ScoutHitBallSpeech:1:10"
+		Response PlayerStunBallHittingItScout
+	}
+	rule NOWP-SandmanKillScout																// If scoring a kill with the Sandman, fire the Moonshot responses, then have 10s downtime
+	{
+		criteria ConceptKilledPlayer KilledPlayerDelay 50PercentChance IsWeaponMelee WeaponIsSandman ScoutNotKillSpeechMelee IsScout
+		ApplyContext "ScoutKillSpeechMelee:1:10"
+		Response PlayerStunBallHitScout
+	}
+	Response NOWP-FishKillExtraScout														// A few extra "humiliating" responses for the Holy Mackerel
+	{
+		scene "scenes/Player/Scout/low/2647.vcd"
+		scene "scenes/Player/Scout/low/2645.vcd"
+		scene "scenes/player/Scout/low/2654.vcd"
+	}
+	rule NOWP-FishKillScout																	// 50% chance to fire on killing with the Fish
+	{
+		criteria ConceptKilledPlayer KilledPlayerDelay 50PercentChance IsWeaponMelee WeaponIsFish ScoutNotKillSpeechMelee IsScout
+		ApplyContext "ScoutKillSpeechMelee:1:10"
+		Response KilledPlayerMeleeFishScout
+		Response NOWP-FishKillExtraScout
+	}
+
+	Rule NOWP-ScoutSwingFistsDM																// When swinging the DM Fists, 30% chance to say something (currently a Melee Dare)
+	{
+		criteria ConceptFireWeapon IsWeaponMelee WeaponIsDMFists 30PercentChance IsNotDaring ScoutNotKillSpeechMelee IsNotDominating IsScout IsNotHeavyFistsSwinging
+		ApplyContext "HeavyFistsSwinging:1:10"
+		Response MeleeDareCombatScout
+	}
+
+// Soldier
+//------------------------------------------------------------------------------------------------------------
+	criterion "WeaponIsDirectRL" 			"item_name" "TF_WEAPON_DIRECTHIT" 				"required" weight 10
+	criterion "WeaponIsCM5K" 				"item_name" "TF_WEAPON_COWMANGLER" 				"required" weight 10
+	criterion "WeaponIsSoldierSSG" 			"item_name" "TF_WEAPON_EXPLOSIVE_SSG" 			"required" weight 10
+	criterion "WeaponIsRidingCrop" 			"item_name" "TF_WEAPON_RIDING_CROP" 			"required" weight 10
+	criterion "WeaponIsPickaxe" 			"item_name" "TF_WEAPON_EQUALIZER" 				"required" weight 10
+
+	rule NOWP-SoldierTauntDirectHit															// RPG taunt
+	{
+		criteria ConceptPlayerTaunt IsSoldier WeaponIsDirectRL
+		response SoldierTauntDirectHit
+	}
+	rule NOWP-SoldierTauntCowMangler														// RL taunt for Mangler since it has issues in the experimental ver
+	{
+		criteria ConceptPlayerTaunt IsSoldier WeaponIsCM5K
+		response SoldierTauntPrimary
+	}
+	rule NOWP-SoldierTauntSSG																// RPG taunt
+	{
+		criteria ConceptPlayerTaunt IsSoldier WeaponIsSoldierSSG
+		response SoldierTauntDirectHit
+	}
+
+	Response NOWP-TossThrowableSoldier														// Some lines to say when throwing a generic throwable - mostly reused from the Melee kill screams.
+	{
+		scene "scenes/Player/Soldier/low/1060.vcd"
+		scene "scenes/Player/Soldier/low/1114.vcd"
+		scene "scenes/Player/Soldier/low/1185.vcd"
+	}
+	rule NOWP-TossThrowableSoldier															// When Soldier throws any throwable, shout a line
+	{
+		criteria ConceptFireWeapon WeaponIsMIRVType IsSoldier
+		Response NOWP-TossThrowableSoldier
+	}
+	rule NOWP-SoldierTauntThrowableGeneric													// When Soldier taunts with any throwable, do the Juggle
+	{
+		criteria ConceptPlayerTaunt IsSoldier WeaponIsMIRVType
+		response SoldierTauntSecondary
+	}
+
+	Response NOWP-RidingCropMoveSoldier                        								// Reused lines from Payload push responses
+	{
+		scene "scenes/Player/Soldier/low/7347.vcd"
+		scene "scenes/Player/Soldier/low/7349.vcd"
+		scene "scenes/Player/Soldier/low/7353.vcd"
+		scene "scenes/Player/Soldier/low/7354.vcd"
+		scene "scenes/Player/Soldier/low/7355.vcd"
+		scene "scenes/Player/Soldier/low/7356.vcd"
+		scene "scenes/Player/Soldier/low/7357.vcd"
+	}
+	Rule NOWP-PlayerBoostSoldier_1															// Since TF_WEAPON_UMBRELLA just fires the Go voice command, hook into it for the Disp. Action!
+	{
+		criteria ConceptPlayerGo IsOnScout IsNotCrossHairEnemy WeaponIsRidingCrop IsSoldier
+		Response NOWP-RidingCropMoveSoldier
+	}
+	Rule NOWP-PlayerBoostSoldier_2															// Unfortunately, duplicated 10+ times since haha, no crosshair_ally criterion exists!
+	{
+		criteria ConceptPlayerGo IsOnSoldier IsNotCrossHairEnemy WeaponIsRidingCrop IsSoldier
+		Response NOWP-RidingCropMoveSoldier
+	}
+	Rule NOWP-PlayerBoostSoldier_3
+	{
+		criteria ConceptPlayerGo IsOnPyro IsNotCrossHairEnemy WeaponIsRidingCrop IsSoldier
+		Response NOWP-RidingCropMoveSoldier
+	}
+	Rule NOWP-PlayerBoostSoldier_4
+	{
+		criteria ConceptPlayerGo IsOnDemoman IsNotCrossHairEnemy WeaponIsRidingCrop IsSoldier
+		Response NOWP-RidingCropMoveSoldier
+	}
+	Rule NOWP-PlayerBoostSoldier_5
+	{
+		criteria ConceptPlayerGo IsOnHeavy IsNotCrossHairEnemy WeaponIsRidingCrop IsSoldier
+		Response NOWP-RidingCropMoveSoldier
+	}
+	Rule NOWP-PlayerBoostSoldier_6
+	{
+		criteria ConceptPlayerGo IsOnEngineer IsNotCrossHairEnemy WeaponIsRidingCrop IsSoldier
+		Response NOWP-RidingCropMoveSoldier
+	}
+	Rule NOWP-PlayerBoostSoldier_7
+	{
+		criteria ConceptPlayerGo IsOnMedic IsNotCrossHairEnemy WeaponIsRidingCrop IsSoldier
+		Response NOWP-RidingCropMoveSoldier
+	}
+	Rule NOWP-PlayerBoostSoldier_8
+	{
+		criteria ConceptPlayerGo IsOnSniper IsNotCrossHairEnemy WeaponIsRidingCrop IsSoldier
+		Response NOWP-RidingCropMoveSoldier
+	}
+	Rule NOWP-PlayerBoostSoldier_9															// There's some weird behavior with disguised enemy Spies, but I'm too tired to bugfix it fully.
+	{
+		criteria ConceptPlayerGo IsOnSpy IsNotCrossHairEnemy WeaponIsRidingCrop IsSoldier
+		Response NOWP-RidingCropMoveSoldier
+	}
+	Rule NOWP-PlayerBoostSoldier_10
+	{
+		criteria ConceptPlayerGo IsOnCivilian IsNotCrossHairEnemy WeaponIsRidingCrop IsSoldier
+		Response NOWP-RidingCropMoveSoldier
+	}
+
+	rule NOWP-SoldierTauntEqualizer															// RPG taunt
+	{
+		criteria ConceptPlayerTaunt IsSoldier WeaponIsPickaxe
+		response SoldierTauntDirectHit
+	}
+	Rule NOWP-SoldierSwingFistsDM
+	{
+		criteria ConceptFireWeapon IsWeaponMelee WeaponIsDMFists 30PercentChance IsNotDaring SoldierNotKillSpeechMelee IsNotDominating IsSoldier IsNotHeavyFistsSwinging
+		ApplyContext "HeavyFistsSwinging:1:10"
+		Response MeleeDareCombatSoldier
+	}
+	rule NOWP-SoldierTauntFistsDM
+	{
+		criteria ConceptPlayerTaunt IsSoldier WeaponIsDMFists
+		response SoldierTauntDirectHit
+	}
+
+// Pyro
+//------------------------------------------------------------------------------------------------------------
+	criterion "WeaponIsMolotovLauncher" 	"item_name" "TF_WEAPON_MOLOTOV_LAUNCHER" 		"required" weight 10
+	criterion "WeaponIsJetpackPyro" 		"item_name" "TF_WEAPON_JETPACK_PYRO" 			"required" weight 10
+	criterion "WeaponIsNotJetpackPyro" 		"item_name" "!=TF_WEAPON_JETPACK_PYRO" 			"required" weight 10
+	criterion "WeaponIsUkulele" 			"item_name" "TF_WEAPON_UKULELE" 				"required" weight 10
+	criterion "PyroNotKillSpeechMelee_NOWP" "PyroKillSpeechMelee" "!=1" 					"required" weight 0
+
+	rule NOWP-PyroTauntMolotovLauncher
+	{
+		criteria ConceptPlayerTaunt IsPyro WeaponIsMolotovLauncher
+		response PyroTauntPrimary
+	}
+
+	Response NOWP-TossThrowablePyro															// Some lines for Pyro to say when throwing the Gas Passer - these are new
+	{
+		scene "scenes/Player/Pyro/low/1419.vcd"
+		scene "scenes/Player/Pyro/low/1457.vcd"
+		scene "scenes/Player/Pyro/low/1460.vcd"
+	}
+	rule NOWP-TossThrowablePyro																// When Pyro throws any throwable, shout a line. Note: Due to its internals, the Thermal Thruster has to be manually left out!
+	{
+		criteria ConceptFireWeapon WeaponIsMIRVType WeaponIsNotJetpackPyro IsPyro
+		Response NOWP-TossThrowablePyro
+	}
+	rule NOWP-PyroTauntThrowableGeneric														// Fireball taunt for Gas Can / most throwables
+	{
+		criteria ConceptPlayerTaunt IsPyro WeaponIsMIRVType
+		response PyroTauntItem1
+	}
+	Response NOWP-JetpackCalloutPyro														// Specific callouts when flying with the Jetpack!
+	{
+		scene "scenes/Player/Pyro/low/1403.vcd"
+		scene "scenes/Player/Pyro/low/1418.vcd"
+		scene "scenes/Player/Pyro/low/1421.vcd"
+	}
+	rule NOWP-JetpackCalloutPyro
+	{
+		criteria ConceptFireWeapon WeaponIsMIRVType WeaponIsJetpackPyro IsPyro
+		Response NOWP-JetpackCalloutPyro
+	}
+
+	rule NOWP-PyroTauntPan																	// Fireball taunt for Frying Pan
+	{
+		criteria ConceptPlayerTaunt IsPyro WeaponIsPan
+		response PyroTauntItem1
+	}
+
+	Response NOWP-MeleePyroCombatPyro														// Add some hacky includes since they're not loaded yet
+	{
+		scene "scenes/Player/Pyro/low/1409.vcd"
+		scene "scenes/Player/Pyro/low/1517.vcd"
+		scene "scenes/Player/Pyro/low/1482.vcd"
+	}
+	Rule NOWP-PyroSwingFistsDM
+	{
+		criteria ConceptFireWeapon IsWeaponMelee WeaponIsDMFists 30PercentChance IsNotDaring PyroNotKillSpeechMelee_NOWP IsNotDominating IsPyro IsNotHeavyFistsSwinging
+		ApplyContext "HeavyFistsSwinging:1:10"
+		Response NOWP-MeleePyroCombatPyro
+	}
+
+// Demoman
+//------------------------------------------------------------------------------------------------------------
+	criterion "WeaponIsNotMIRV" 			"item_name" "!=MIRV" 							"required" weight 10
+	criterion "WeaponIsFlechette" 			"item_name" "TF_WEAPON_FLECHETTE_GUN" 			"required" weight 10
+	criterion "WeaponIsNotPan" 				"item_name" "!=TF_WEAPON_FRYING_PAN" 			"required" weight 10
+	criterion "WeaponIsEyelander" 			"item_name" "TF_WEAPON_CLAYMORE" 				"required" weight 10
+	criterion "WeaponIsNotEyelander" 		"item_name" "!=TF_WEAPON_CLAYMORE" 				"required" weight 10
+	criterion "WeaponIsGolfClub" 			"item_name" "TF_WEAPON_GOLF_CLUB" 				"required" weight 10
+	criterion "WeaponIsNotGolfClub" 		"item_name" "!=TF_WEAPON_GOLF_CLUB" 			"required" weight 10
+	criterion "WeaponIsCaberMaybe" 			"item_name" "TF_WEAPON_CABER" 					"required" weight 100
+	criterion "WeaponIsNotCaberMaybe" 		"item_name" "!=TF_WEAPON_CABER" 				"required" weight 100
+	criterion "WeaponIsGauntletDemo" 		"item_name" "TF_WEAPON_GAUNTLET_DEMO" 			"required" weight 50
+	criterion "DemomanNotIdleDrunk" 		"DemomanIdleDrunk" "!=1" 						"required" weight 100
+
+	Response NOWP-TossThrowableDemoman
+	{
+		scene "scenes/Player/Demoman/low/1008.vcd"
+		scene "scenes/Player/Demoman/low/1358.vcd"
+		scene "scenes/Player/Demoman/low/1379.vcd"
+	}
+	rule NOWP-TossThrowableDemoman															// When Demo throws a throwable that ISN'T the MIRV, shout a line. This is to keep base behavior since he doesn't normally say anything.
+	{
+		criteria ConceptFireWeapon WeaponIsNotMIRV WeaponIsMIRVType IsDemoman
+		Response NOWP-TossThrowableDemoman
+	}
+	rule NOWP-DemomanTauntThrowableGeneric													// When Demo taunts with any throwable that ISN'T the MIRV, do something funny anyway
+	{
+		criteria ConceptPlayerTaunt IsDemoman WeaponIsNotMIRV WeaponIsMIRVType
+		response DemomanTauntMirv
+	}
+	rule NOWP-DemomanTauntFlechette															// Twirl
+	{
+		criteria ConceptPlayerTaunt IsDemoman WeaponIsFlechette
+		response DemomanTauntPrimary
+	}
+
+	rule NOWP-ClubKillDemoman																// If Demoman gets a kill with a Kukri type weapon, use some different slurred responses
+	{
+		criteria ConceptKilledPlayer KilledPlayerDelay WeaponIsClub WeaponIsNotEyelander WeaponIsNotGolfClub 30PercentChance DemomanNotKillSpeechMelee IsDemoman
+		ApplyContext "DemomanKillSpeechMelee:1:10"
+		Response KilledPlayerPanDemoman
+	}
+	rule NOWP-DemomanTauntDemoClub															// For not-Bottle, not-Pan melees, use the GL's taunt
+	{
+		criteria ConceptPlayerTaunt IsDemoman WeaponIsClub WeaponIsNotPan
+		response DemomanTauntSecondary
+	}
+	rule NOWP-EyelanderKillDemoman
+	{
+		criteria ConceptKilledPlayer KilledPlayerDelay WeaponIsEyelander 30PercentChance DemomanNotKillSpeechMelee IsDemoman
+		ApplyContext "DemomanKillSpeechMelee:1:10"
+		Response KilledPlayerSwordDemoman
+	}
+	rule NOWP-EyelanderKill2Demoman															// If a Demoman is killed with the Eyelander, fire this
+	{
+		criteria ConceptKilledPlayer KilledPlayerDelay WeaponIsEyelander 30PercentChance IsVictimDemoman DemomanNotKillSpeechMelee IsDemoman
+		ApplyContext "DemomanKillSpeechMelee:1:10"
+		Response KilledPlayerSword2Demoman
+	}
+	Response NOWP-GolfClubKillDemoman														// Some new responses for killing someone with the Golf Club
+	{
+		scene "scenes/Player/Demoman/low/866.vcd"	// aye that's the way you do it!
+		scene "scenes/Player/Demoman/low/868.vcd"	// time to get bluttered!
+		scene "scenes/Player/Demoman/low/1004.vcd"	// let that be a bloody lesson
+	}
+	rule NOWP-GolfClubKillDemoman															// Triggers even with accident deaths probably
+	{
+		criteria ConceptKilledPlayer KilledPlayerDelay WeaponIsGolfClub 30PercentChance DemomanNotKillSpeechMelee IsDemoman
+		ApplyContext "DemomanKillSpeechMelee:1:10"
+		Response NOWP-GolfClubKillDemoman
+	}
+	Rule NOWP-DemomanSwingCaber																// Say the invuln lines every now and again while swinging with the caber
+	{
+		criteria ConceptFireWeapon IsWeaponMelee WeaponIsCaberMaybe 20PercentChance IsNotDaring DemomanNotKillSpeechMelee IsNotDominating IsDemoman IsNotHeavyFistsSwinging
+		ApplyContext "HeavyFistsSwinging:1:10"
+		Response InvulnerableSpeechDemoman
+		Response InvulnerableSpeechDemoman2
+	}
+	rule NOWP-CaberKillDemoman																// When you get any sorta kill with the Caber
+	{
+		criteria ConceptKilledPlayer KilledPlayerDelay WeaponIsCaberMaybe 30PercentChance DemomanNotKillSpeechMelee IsDemoman
+		ApplyContext "DemomanKillSpeechMelee:1:10"
+		Response KilledPlayerCaberDemoman
+	}
+	rule NOWP-EyelanderKillDemoman															// Dupe of Eyelander Stuff for the Gauntlet
+	{
+		criteria ConceptKilledPlayer KilledPlayerDelay WeaponIsGauntletDemo 30PercentChance DemomanNotKillSpeechMelee IsDemoman
+		ApplyContext "DemomanKillSpeechMelee:1:10"
+		Response KilledPlayerSwordDemoman
+	}
+
+	Rule NOWP-DemomanSwingFistsDM															// For Demoman DM Fists, also spout drunk lines sometimes
+	{
+		criteria ConceptFireWeapon IsWeaponMelee WeaponIsDMFists 30PercentChance IsNotDaring DemomanNotKillSpeechMelee IsNotDominating IsDemoman IsNotHeavyFistsSwinging
+		ApplyContext "HeavyFistsSwinging:1:10"
+		Response MeleeDareCombatDemoman
+		Response KilledPlayerPanDemoman
+	}
+	rule NOWP-DemomanTauntFistsDM
+	{
+		criteria ConceptPlayerTaunt IsDemoman WeaponIsDMFists
+		response DemomanTauntPrimary
+	}
+
+// Heavy
+//------------------------------------------------------------------------------------------------------------
+	criterion "WeaponIsAAGunType" 			"playerweapon" "tf_weapon_aagun" 				"required"
+	criterion "WeaponIsHMG" 				"item_name" "TF_WEAPON_MACHINEGUN" 				"required" weight 10
+	criterion "WeaponIsChainsaw" 			"item_name" "TF_WEAPON_CHAINSAW" 				"required" weight 10
+	criterion "WeaponIsAA12" 				"item_name" "TF_WEAPON_AA12_REPEATER" 			"required" weight 10
+	criterion "WeaponIsNotBrick" 			"item_name" "!=TF_WEAPON_BRICK" 				"required" weight 10
+	criterion "WeaponIsPipe" 				"item_name" "TF_WEAPON_LEAD_PIPE" 				"required" weight 10
+	criterion "WeaponIsNotSandvich" 		"item_name" "!=The Sandvich" 					"required" weight 100
+	criterion "WeaponIsChocoBar" 			"item_name" "TF_WEAPON_DALOKOHS" 				"required" weight 100
+	Criterion "HeavyIsNotInPain" 			"HeavyAteBrick" "!=1" 							"required" weight 0
+	Criterion "HeavyIsInPain" 				"HeavyAteBrick" "1" 							"required" weight 0
+
+	rule NOWP-HeavyFireAAGun																// When Heavy -starts- firing the AA Gun, make a face. The rest of the responses are nonfunctional for the AA Cannon
+	{
+		criteria ConceptFireMinigun IsHeavy WeaponIsAAGunType
+		Response HeavyFireMinigun
+	}
+	Response NOWP-HeavyTimeFiringChainsawShort												// New lines for when Heavy is attacking with the Chainsaw
+	{
+		scene "scenes/player/heavy/low/269.vcd"
+		scene "scenes/player/heavy/low/2080.vcd"
+	}
+	Response NOWP-HeavyTimeFiringChainsawLong
+	{
+		scene "scenes/Player/Heavy/low/2075.vcd"
+		scene "scenes/player/heavy/low/2077.vcd"
+	}
+	Response NOWP-HeavyTimeFiringChainsawReallyLong
+	{
+		scene "scenes/player/heavy/low/319.vcd"
+		scene "scenes/player/heavy/low/326.vcd"
+		scene "scenes/player/heavy/low/2084.vcd"
+	}
+	Rule NOWP-HeavyTimeFiringChainsawShort
+	{
+		criteria ConceptFireMinigunTalk IsHeavy WeaponIsChainsaw TimeFiringMinigunShort 30PercentChance
+		Response HeavyTimeFiringMinigunShort
+		Response NOWP-HeavyTimeFiringChainsawShort											// Plays in addition to the base Minigun fire responses
+	}
+	Rule NOWP-HeavyTimeFiringChainsawLong
+	{
+		criteria ConceptFireMinigunTalk IsHeavy WeaponIsChainsaw TimeFiringMinigunLong 50PercentChance
+		Response HeavyTimeFiringMinigunLong
+		Response NOWP-HeavyTimeFiringChainsawLong
+	}
+	Rule NOWP-HeavyTimeFiringChainsawReallyLong
+	{
+		criteria ConceptFireMinigunTalk IsHeavy WeaponIsChainsaw TimeFiringMinigunReallyLong 50PercentChance
+		Response HeavyTimeFiringMinigunReallyLong
+		Response NOWP-HeavyTimeFiringChainsawReallyLong
+	}
+	Rule NOWP-KilledChainsawHeavy															// 50% chance to play one of Heavy's many mocking Domination lines on kill.
+	{
+		criterion ConceptKilledPlayer KilledPlayerDelay 50PercentChance IsWeaponPrimary HeavyNotKillSpeech IsHeavy WeaponIsChainsaw
+		ApplyContext "HeavyKillSpeech:1:30"
+		Response PlayerKilledDominatingHeavy
+	}
+	Rule NOWP-MeleeDareChainsawHeavy														// Lets you play melee dare lines with the Chainsaw out
+	{
+		criteria ConceptPlayerBattleCry WeaponIsChainsaw IsHeavy IsCrosshairEnemy
+		ApplyContext "IsDaring:1:5"
+		Response MeleeDareCombatHeavy
+	}
+
+	rule NOWP-HeavyTauntHMG																	// Shotgun taunt
+	{
+		criteria ConceptPlayerTaunt IsHeavy WeaponIsHMG
+		response HeavyTauntSecondary
+	}
+	rule NOWP-HeavyTauntAA12
+	{
+		criteria ConceptPlayerTaunt IsHeavy WeaponIsAA12
+		response HeavyTauntSecondary
+	}
+
+// GRANDFATHERED IN FROM LIVE
+	Response NOWP-AteSteakHeavy
+	{
+		scene "scenes/Player/Heavy/low/SandwichTaunt01.vcd" predelay "1.0" 
+		scene "scenes/Player/Heavy/low/SandwichTaunt02.vcd" predelay "1.0" 
+		scene "scenes/Player/Heavy/low/SandwichTaunt14.vcd" predelay "1.0" 
+		scene "scenes/Player/Heavy/low/SandwichTaunt17.vcd" predelay "1.0" 
+	}
+	Rule NOWP-AteSteakHeavy
+	{
+		criteria ConceptAteFood IsHeavy IsWeaponMelee
+		Response NOWP-AteSteakHeavy
+	}
+	Response NOWP-AteChocoHeavy
+	{
+		scene "scenes/Player/Heavy/low/SandwichTaunt01.vcd" predelay "1.0" 
+		scene "scenes/Player/Heavy/low/SandwichTaunt02.vcd" predelay "1.0" 
+		scene "scenes/Player/Heavy/low/SandwichTaunt14.vcd" predelay "1.0" 
+		scene "scenes/Player/Heavy/low/SandwichTaunt17.vcd" predelay "1.0" 
+		scene "scenes/Player/Heavy/low/2066.vcd" predelay "1.0" 
+		scene "scenes/Player/Heavy/low/2260.vcd" predelay "1.0" 
+	}
+	Rule NOWP-AteChocoHeavy
+	{
+		criteria ConceptAteFood IsHeavy WeaponIsChocoBar
+		Response NOWP-AteChocoHeavy
+	}
+//END
+	Rule NOWP-AteGenericHeavy
+	{
+		criteria ConceptAteFood IsHeavy WeaponIsLunchbox
+		Response NOWP-AteChocoHeavy
+	}
+	rule NOWP-HeavyTauntLunchboxGeneric														// When Heavy taunts with any lunchbox, try to respond with generic Lunchbox lines
+	{
+		criteria ConceptPlayerTaunt IsHeavy WeaponIsLunchbox
+		response HeavyTauntPlayerItem1
+	}
+
+	Response NOWP-TossThrowableHeavy
+	{
+		scene "scenes/player/heavy/low/1980.vcd"
+		scene "scenes/Player/Heavy/low/253.vcd"
+		scene "scenes/Player/Heavy/low/1979.vcd"
+	}
+	rule NOWP-TossThrowableHeavy
+	{
+		criteria ConceptFireWeapon WeaponIsMIRVType IsHeavy
+		Response NOWP-TossThrowableHeavy
+	}
+	rule NOWP-HeavyTauntThrowableGeneric													// When Heavy taunts with any throwable, do something funny
+	{
+		criteria ConceptPlayerTaunt IsHeavy WeaponIsMIRVType WeaponIsNotBrick
+		response HeavyTauntMelee
+	}
+	rule NOWP-HeavyTauntThrowableBrick														// When Heavy taunts with a brick, do something funnier 3 seconds later
+	{
+		criteria ConceptPlayerTaunt IsHeavy WeaponIsMIRVType WeaponIsBrick
+		ApplyContext "HeavyAteBrick:1:5"
+		response HeavyTauntPlayerItem1
+	}
+	rule NOWP-AteBrickHeavy																	// ...Ow? Fires as soon as he finishes eating
+	{
+		criteria ConceptPlayerExpression HeavyIsInPain IsHeavy WeaponIsBrick 100PercentChance
+		Response PlayerAttackerPainHeavy
+		Response PlayerAttackerPainHeavy
+		Response PlayerAttackerPainHeavy
+		Response PlayerNegativeHeavy
+		Response PlayerNegativeHeavy
+		Response PlayerJeersHeavy
+		Response PlayerMedicHeavy
+	}
+
+	rule NOWP-HeavyTauntCrowbar																// Shotgun taunt again - works as long as the weapon is on bip_hand_r so it doesn't move much!
+	{
+		criteria ConceptPlayerTaunt IsHeavy WeaponIsCrowbar 
+		response HeavyTauntSecondary
+	}
+	rule NOWP-HeavyTauntObjector
+	{
+		criteria ConceptPlayerTaunt IsHeavy WeaponIsObjector
+		response HeavyTauntSecondary
+	}
+	rule NOWP-HeavyTauntPipe
+	{
+		criteria ConceptPlayerTaunt IsHeavy WeaponIsPipe
+		response HeavyTauntSecondary
+	}
+
+	Rule NOWP-HeavySwingFistsDM																// Unused, but here anyway for posterity
+	{
+		criteria ConceptFireWeapon IsWeaponMelee WeaponIsDMFists 30PercentChance IsNotDaring HeavyNotKillSpeechMelee IsNotDominating IsHeavy IsNotHeavyFistsSwinging
+		ApplyContext "HeavyFistsSwinging:1:10"
+		Response MeleeDareCombatHeavy
+	}
+
+// Engineer
+//------------------------------------------------------------------------------------------------------------
+	criterion "WeaponIsRailgun" 			"item_name" "TF_WEAPON_RAILGUN_DM" 				"required" weight 10
+	criterion "WeaponIsRevolverEngi" 		"item_name" "TF_WEAPON_REVOLVER_ENGI" 			"required" weight 10
+	criterion "WeaponIsRevolverTypeName" 	"item_type_name" "#TF_Weapon_Revolver" 			"required" weight 10
+	criterion "WeaponIsDispenserizer" 		"item_name" "TF_WEAPON_DISPENSERIZER" 			"required" weight 10
+	criterion "WeaponIsEurekaWrench" 		"item_name" "TF_WEAPON_REMOTE_UPGRADE" 			"required" weight 10
+	Criterion "DidNotFireDispenserRecently" "FiredDispenserRecently" "!=1" 					"required" weight 0
+
+	rule NOWP-EngineerTauntNailgun															// Secondary taunt
+	{
+		criteria ConceptPlayerTaunt IsEngineer WeaponIsNailgun
+		response EngineerTauntSecondary
+	}
+	Response NOWP-RailGunKillEngineer														// Everything but "this thing ain't on autopilot", also removed delays
+	{
+		scene "scenes/Player/Engineer/low/3604.vcd"
+		scene "scenes/Player/Engineer/low/3700.vcd"
+		scene "scenes/Player/Engineer/low/3704.vcd"
+	}
+	rule NOWP-RailGunKillEngineer															// If an Engineer gets a kill with the Super Railgun, speak some Wrangler lines
+	{
+		criteria ConceptKilledPlayer IsEngineer WeaponIsRailgun 30PercentChance EngineerNotKillSpeech
+		ApplyContext "EngineerKillSpeech:1:10"
+		Response NOWP-RailGunKillEngineer
+	}
+
+	rule NOWP-EngiRevolverKillEngineer														// If an Engineer gets a kill with one of his Revolvers, speak the Gunslinger triple-punch lines
+	{
+		criteria ConceptKilledPlayer KilledPlayerDelay 20PercentChance WeaponIsRevolverEngi IsEngineer EngineerNotKillSpeech
+		ApplyContext "EngineerKillSpeech:1:10"
+		Response EngySwingFist
+	}
+	rule NOWP-RevolverTypeKillEngineer														// If an Engineer gets a kill with any Revolver-type weapon, speak the Gunslinger triple-punch lines
+	{
+		criteria ConceptKilledPlayer KilledPlayerDelay 20PercentChance WeaponIsRevolverTypeName IsEngineer EngineerNotKillSpeech
+		ApplyContext "EngineerKillSpeech:1:10"
+		Response EngySwingFist
+	}
+	Rule NOWP-EngineerFireDispenserizer
+	{
+		criteria ConceptFireWeapon WeaponIsDispenserizer 50PercentChance IsNotDominating IsEngineer DidNotFireDispenserRecently
+		ApplyContext "FiredDispenserRecently:1:10"
+		Response PlayerBuildingDispenserEngineer
+	}
+	Response NOWP-TossThrowableEngineer
+	{
+		scene "scenes/Player/Engineer/low/36.vcd"
+		scene "scenes/Player/Engineer/low/88.vcd"
+		scene "scenes/Player/Engineer/low/155.vcd"
+	}
+	rule NOWP-TossThrowableEngineer
+	{
+		criteria ConceptFireWeapon WeaponIsMIRVType IsEngineer
+		Response NOWP-TossThrowableEngineer
+	}
+	rule NOWP-EngineerTauntThrowableGeneric													// When Engi taunts with any throwable, do a little spin
+	{
+		criteria ConceptPlayerTaunt IsEngineer WeaponIsMIRVType
+		response EngineerTauntSecondary
+	}
+
+	rule NOWP-EngineerTauntEurekaAlt														// Secondary taunt
+	{
+		criteria ConceptPlayerTaunt IsEngineer WeaponIsEurekaWrench
+		response EngineerTauntSecondary
+	}
+	rule NOWP-EngineerTauntUkulele															// Primary taunt
+	{
+		criteria ConceptPlayerTaunt IsEngineer WeaponIsUkulele
+		response EngineerTauntPrimary
+	}
+	rule NOWP-EngineerTauntFistsDM															// Primary taunt
+	{
+		criteria ConceptPlayerTaunt IsEngineer WeaponIsDMFists
+		response EngineerTauntPrimary
+	}
+	Rule NOWP-EngineerSwingFistsDM
+	{
+		criteria ConceptFireWeapon IsWeaponMelee WeaponIsDMFists 30PercentChance IsNotDaring EngineerNotKillSpeechMelee IsNotDominating IsEngineer IsNotHeavyFistsSwinging
+		ApplyContext "HeavyFistsSwinging:1:10"
+		Response MeleeDareCombatEngineer
+		Response EngySwingFistStart
+		Response EngySwingFistStart															// Slightly more often he says one of the Gunslinger swinging lines
+	}
+	rule NOWP-FistsDMKillEngineer															// If an Engineer gets a kill with his fists, speak the Gunslinger triple-punch lines
+	{
+		criteria ConceptKilledPlayer KilledPlayerDelay 30PercentChance WeaponIsDMFists IsEngineer EngineerNotKillSpeech
+		ApplyContext "EngineerKillSpeech:1:10"
+		Response EngySwingFist
+	}
+	
+//--- Sneakily backported these from my old mod for funnies;
+	criterion "WeaponIsBuilder" 			"playerweapon" "tf_weapon_builder" 				"required"
+
+Rule NOWP-PlayerBuildingDispenserHereEngineer
+{
+	criteria ConceptPlayerSentryHere WeaponIsBuilder IsEngineer
+	Response PlayerBuildingSentryEngineer
+}
+Rule NOWP-PlayerBuildingSentryHereEngineer
+{
+	criteria ConceptPlayerDispenserHere WeaponIsBuilder IsEngineer
+	Response PlayerBuildingDispenserEngineer
+}
+Rule NOWP-PlayerBuildingTeleporterHereEngineer
+{
+	criteria ConceptPlayerTeleporterHere WeaponIsBuilder IsEngineer
+	Response PlayerBuildingTeleporterEngineer
+}
+
+// Medic
+//------------------------------------------------------------------------------------------------------------
+	criterion "WeaponIsSatchel" 			"item_name" "TF_WEARABLE_MEDBAG" 				"required" weight 10
+	criterion "WeaponIsMedicAmputator" 		"item_name" "TF_WEAPON_AMPUTATOR" 				"required" weight 10
+
+	rule NOWP-SatchelJumpMedic																// When Medic jumps with the Satchel - say something!
+	{
+		criteria ConceptFireWeapon WeaponIsSatchel IsMedic
+//		Response PlayerBattleCryMedic
+		Response PlayerGoMedic
+	}
+	rule NOWP-MedicTauntSatchel
+	{
+		criteria ConceptPlayerTaunt IsMedic WeaponIsSatchel 
+		response MedicTauntSecondary
+	}
+	rule NOWP-MedicTauntBrick
+	{
+		criteria ConceptPlayerTaunt IsMedic WeaponIsBrick
+		response MedicTauntPrimary
+	}
+
+	Response NOWP-TossThrowableMedic
+	{
+		scene "scenes/Player/Medic/low/537.vcd" 
+		scene "scenes/Player/Medic/low/541.vcd" 
+		scene "scenes/Player/Medic/low/653.vcd" 
+	}
+	rule NOWP-TossThrowableMedic
+	{
+		criteria ConceptFireWeapon WeaponIsMIRVType IsMedic
+		Response NOWP-TossThrowableMedic
+	}
+	rule NOWP-MedicTauntThrowableGeneric													// When Medic taunts with any throwable, do the melee taunt
+	{
+		criteria ConceptPlayerTaunt IsMedic WeaponIsMIRVType
+		response MedicTauntSecondary
+	}
+
+	rule NOWP-MedicTauntCrowbar
+	{
+		criteria ConceptPlayerTaunt IsMedic WeaponIsCrowbar 
+		response MedicTauntPrimary
+	}
+	rule NOWP-MedicTauntPan																	// Taunt kill
+	{
+		criteria ConceptPlayerTaunt IsMedic WeaponIsPan
+		response MedicTauntUbersaw
+	}
+	rule NOWP-MedicTauntObjector
+	{
+		criteria ConceptPlayerTaunt IsMedic WeaponIsObjector
+		response MedicTauntPrimary
+	}
+	rule NOWP-MedicTauntUkulele
+	{
+		criteria ConceptPlayerTaunt IsMedic WeaponIsUkulele
+		response MedicTauntSecondary
+	}
+
+	Rule NOWP-MedicSwingFistsDM
+	{
+		criteria ConceptFireWeapon IsWeaponMelee WeaponIsDMFists 30PercentChance IsNotDaring MedicNotKillSpeechMelee IsNotDominating IsMedic IsNotHeavyFistsSwinging
+		ApplyContext "HeavyFistsSwinging:1:10"
+		Response MeleeDareCombatMedic
+	}
+	rule NOWP-MedicTauntFistsDM
+	{
+		criteria ConceptPlayerTaunt IsMedic WeaponIsDMFists
+		response MedicTauntPrimary
+	}
+
+	Rule NOWP-PlayerBoostMedic_1															// Since TF_WEAPON_UMBRELLA just fires the Go voice command, hook into it for the Amputator
+	{
+		criteria ConceptPlayerGo IsOnScout IsNotCrossHairEnemy WeaponIsMedicAmputator IsMedic
+		Response PlayerCapturedPointMedic													// Play his captured point lines, as encouragement
+	}
+	Rule NOWP-PlayerBoostMedic_2															// Unfortunately, duplicated 10+ times since haha, no crosshair_ally criterion exists!
+	{
+		criteria ConceptPlayerGo IsOnSoldier IsNotCrossHairEnemy WeaponIsMedicAmputator IsMedic
+		Response PlayerCapturedPointMedic
+	}
+	Rule NOWP-PlayerBoostMedic_3
+	{
+		criteria ConceptPlayerGo IsOnPyro IsNotCrossHairEnemy WeaponIsMedicAmputator IsMedic
+		Response PlayerCapturedPointMedic
+	}
+	Rule NOWP-PlayerBoostMedic_4
+	{
+		criteria ConceptPlayerGo IsOnDemoman IsNotCrossHairEnemy WeaponIsMedicAmputator IsMedic
+		Response PlayerCapturedPointMedic
+	}
+	Rule NOWP-PlayerBoostMedic_5
+	{
+		criteria ConceptPlayerGo IsOnHeavy IsNotCrossHairEnemy WeaponIsMedicAmputator IsMedic
+		Response PlayerCapturedPointMedic
+	}
+	Rule NOWP-PlayerBoostMedic_6
+	{
+		criteria ConceptPlayerGo IsOnEngineer IsNotCrossHairEnemy WeaponIsMedicAmputator IsMedic
+		Response PlayerCapturedPointMedic
+	}
+	Rule NOWP-PlayerBoostMedic_7
+	{
+		criteria ConceptPlayerGo IsOnMedic IsNotCrossHairEnemy WeaponIsMedicAmputator IsMedic
+		Response PlayerCapturedPointMedic
+	}
+	Rule NOWP-PlayerBoostMedic_8
+	{
+		criteria ConceptPlayerGo IsOnSniper IsNotCrossHairEnemy WeaponIsMedicAmputator IsMedic
+		Response PlayerCapturedPointMedic
+	}
+	Rule NOWP-PlayerBoostMedic_9															// There's some weird behavior with disguised enemy Spies, but I'm too tired to bugfix it fully.
+	{
+		criteria ConceptPlayerGo IsOnSpy IsNotCrossHairEnemy WeaponIsMedicAmputator IsMedic
+		Response PlayerCapturedPointMedic
+	}
+	Rule NOWP-PlayerBoostMedic_10
+	{
+		criteria ConceptPlayerGo IsOnCivilian IsNotCrossHairEnemy WeaponIsMedicAmputator IsMedic
+		Response PlayerCapturedPointMedic
+	}
+
+// Sniper
+//------------------------------------------------------------------------------------------------------------
+	rule NOWP-TossThrowableSniper															// Jarate responses, for any throwable
+	{
+		criteria ConceptFireWeapon WeaponIsMIRVType IsSniper
+		Response PlayerJarateToss
+	}
+	rule NOWP-SniperTauntThrowableGeneric
+	{
+		criteria ConceptPlayerTaunt IsSniper WeaponIsMIRVType
+		response SniperTauntPrimary															// Play the Melee taunt for throwables, at the lack of a better one.
+	}
+	Rule NOWP-MeleeDareThrowableSniper														// Lets you play melee dare lines with Jarate / Brick
+	{
+		criteria ConceptPlayerBattleCry WeaponIsMIRVType IsSniper IsCrosshairEnemy
+		ApplyContext "IsDaring:1:5"
+		Response MeleeDareCombatSniperFishwhacker
+	}
+
+	rule NOWP-KilledPlayerCrowbarSniper
+	{
+		criteria ConceptKilledPlayer KilledPlayerDelay 30PercentChance WeaponIsCrowbar SniperNotKillSpeechMelee IsSniper
+		ApplyContext "SniperKillSpeechMelee:1:10"
+		Response KilledPlayerFishwhackerSniper
+	}
+	rule NOWP-KilledPlayerPanSniper
+	{
+		criteria ConceptKilledPlayer KilledPlayerDelay 30PercentChance WeaponIsPan SniperNotKillSpeechMelee IsSniper
+		ApplyContext "SniperKillSpeechMelee:1:10"
+		Response KilledPlayerFishwhackerSniper
+	}
+	rule NOWP-KilledPlayerObjectorSniper
+	{
+		criteria ConceptKilledPlayer KilledPlayerDelay 30PercentChance WeaponIsObjector SniperNotKillSpeechMelee IsSniper
+		ApplyContext "SniperKillSpeechMelee:1:10"
+		Response KilledPlayerFishwhackerSniper
+	}
+
+	rule NOWP-SniperTauntFistsDM
+	{
+		criteria ConceptPlayerTaunt IsSniper WeaponIsDMFists
+		response SniperTauntPrimary
+	}
+	Rule NOWP-SniperSwingFistsDM
+	{
+		criteria ConceptFireWeapon IsWeaponMelee WeaponIsDMFists 30PercentChance IsNotDaring SniperNotKillSpeechMelee IsNotDominating IsSniper IsNotHeavyFistsSwinging
+		ApplyContext "HeavyFistsSwinging:1:10"
+		Response MeleeDareCombatSniperFishwhacker											// A version of Melee Dare that says less kukri-related lines
+	}
+	
+// Spy
+//------------------------------------------------------------------------------------------------------------
+	criterion "WeaponIsTripmine" 		"item_name" "TF_WEAPON_TRAP_CONC" 					"required" weight 10
+	criterion "WeaponIsKnifeGun" 		"item_name" "TF_WEAPON_KNIFE_GUN" 					"required" weight 10
+	criterion "SpyNotKillSpeechMelee_NOWP" "SpyKillSpeechMelee" "!=1" 						"required" weight 0
+
+	rule NOWP-SpyTauntTripmine																// Trigger the Disguise Kit taunt with the Inside Jab active!
+	{
+		criteria ConceptPlayerTaunt IsSpy WeaponIsTripmine
+		response SpyTauntPDA
+	}
+	Response NOWP-TossThrowableSpy															// I don't think these have a way to trigger naturally, but it's here as a contingency
+	{
+		scene "scenes/Player/Spy/low/707.vcd" 
+		scene "scenes/Player/Spy/low/817.vcd" 
+		scene "scenes/Player/Spy/low/820.vcd" 
+	}
+	rule NOWP-TossThrowableSpy
+	{
+		criteria ConceptFireWeapon WeaponIsMIRVType IsSpy
+		Response NOWP-TossThrowableSpy
+	}
+	rule NOWP-SpyTauntThrowableGeneric														// When Spy taunts with any throwable, do a taunt
+	{
+		criteria ConceptPlayerTaunt IsSpy WeaponIsMIRVType
+		response SpyTauntPDA
+	}
+
+	rule NOWP-SpyTauntKnifeGun																// Trigger the Disguise Kit taunt with the Inside Jab active!
+	{
+		criteria ConceptPlayerTaunt IsSpy WeaponIsKnifeGun
+		response SpyTauntPrimary
+	}
+
+	Response NOWP-MeleeDareCombatSpy
+	{
+		scene "scenes/Player/Spy/low/3016.vcd"
+		scene "scenes/Player/Spy/low/3023.vcd"
+		scene "scenes/Player/Spy/low/834.vcd"
+		scene "scenes/Player/Spy/low/845.vcd"
+		scene "scenes/Player/Spy/low/847.vcd"
+		scene "scenes/Player/Spy/low/846.vcd"
+		scene "scenes/Player/Spy/low/824.vcd"
+	}
+	Rule NOWP-SpySwingFistsDM
+	{
+		criteria ConceptFireWeapon IsWeaponMelee WeaponIsDMFists 30PercentChance IsNotDaring SpyNotKillSpeechMelee_NOWP IsNotDominating IsSpy IsNotHeavyFistsSwinging
+		ApplyContext "HeavyFistsSwinging:1:10"
+		Response NOWP-MeleeDareCombatSpy
+	}
+	rule NOWP-SpyTauntFistsDM
+	{
+		criteria ConceptPlayerTaunt IsSpy WeaponIsDMFists
+		response SpyTauntPDA
+	}
+
+// Civilian (TF2C)
+//------------------------------------------------------------------------------------------------------------
+	criterion "WeaponIsDebuff" 		"item_name" "TF_WEAPON_REVOLVER_CIVILIAN_ALT" 			"required" weight 10
+	criterion "CivilianNotKillSpeechMelee_NOWP" "CivilianKillSpeechMelee" "!=1" 			"required" weight 0
+
+	Response NOWP-TossThrowableCivilian
+	{
+		scene "scenes/Player/Civilian/low/Domination01.vcd"
+		scene "scenes/Player/Civilian/low/Incoming01.vcd"
+		scene "scenes/Player/Civilian/low/Go04.vcd"
+		scene "scenes/Player/Civilian/low/Taunts02.vcd"	// Not present?
+		scene "scenes/Player/Civilian/low/Taunts05.vcd"	// Not present?
+	}
+	rule NOWP-TossThrowableCivilian
+	{
+		criteria ConceptFireWeapon WeaponIsMIRVType IsCivilian HasntThrownRecently
+		ApplyContext "ThrewSomethingRecently:1:2"
+		Response NOWP-TossThrowableCivilian
+	}
+	rule NOWP-CivilianTauntThrowableGeneric													// When Civ taunts with any throwable, do the melee taunt (obviously lmao)
+	{
+		criteria ConceptPlayerTaunt IsCivilian WeaponIsMIRVType
+		response CivilianTauntMelee
+	}
+
+	Response NOWP-MeleeDareCombatCivilian
+	{
+		scene "scenes/Player/Civilian/low/Domination01.vcd"
+		scene "scenes/Player/Civilian/low/Domination02.vcd"
+		scene "scenes/Player/Civilian/low/Domination04.vcd"
+		scene "scenes/Player/Civilian/low/Domination06.vcd"
+		scene "scenes/Player/Civilian/low/Domination07.vcd"
+		scene "scenes/Player/Civilian/low/AutoDejectedTie01.vcd"
+		scene "scenes/Player/Civilian/low/Jeers02.vcd"
+		scene "scenes/Player/Civilian/low/Success05.vcd"
+	}
+	Rule NOWP-MeleeDareCombatCivilian
+	{
+		criteria ConceptPlayerBattleCry IsWeaponMelee IsCivilian IsCrosshairEnemy
+		Response NOWP-MeleeDareCombatCivilian
+	}
+	Rule NOWP-CivilianSwingFistsDM
+	{
+		criteria ConceptFireWeapon IsWeaponMelee WeaponIsDMFists 30PercentChance IsNotDaring CivilianNotKillSpeechMelee_NOWP IsNotDominating IsCivilian IsNotHeavyFistsSwinging
+		ApplyContext "HeavyFistsSwinging:1:10"
+		Response NOWP-MeleeDareCombatCivilian
+	}
+
+	Response NOWP-CivilianDebuffApplyEnemy													// When Civ debuffs enemies with a Debuffer, say something!
+	{
+		scene "scenes/Player/Civilian/low/Domination01.vcd"
+		scene "scenes/Player/Civilian/low/Domination02.vcd"
+		scene "scenes/Player/Civilian/low/Failure04.vcd"
+		scene "scenes/Player/Civilian/low/NegativeVocalization01.vcd"
+		scene "scenes/Player/Civilian/low/Taunts03.vcd"	// Not present?
+		scene "scenes/Player/Civilian/low/Taunts04.vcd"	// Not present?
+		scene "scenes/Player/Civilian/low/Taunts05.vcd"	// Not present?
+	}
+	Rule NOWP-PlayerDebuffCivilian
+	{
+		criteria ConceptPlayerBattleCry IsCrossHairEnemy WeaponIsDebuff IsCivilian
+		Response NOWP-CivilianDebuffApplyEnemy
+	}
